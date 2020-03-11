@@ -18,7 +18,7 @@ NOTE: The repository for blebox_uniapi PyPI module (used by this integration) is
 
 ## Instructions
 
-1. Download: https://github.com/gadgetmobile/home-assistant-blebox/archive/0.0.1.zip
+1. Download the latest release: https://github.com/gadgetmobile/home-assistant-blebox/releases/latest
 
 2. Unzip to your Home Assistant config dir in a `custom_components` subdirectory.
 
