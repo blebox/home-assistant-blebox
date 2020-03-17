@@ -3,22 +3,16 @@
 Home Assistant BleBox integration (as a Home Assistant custom component).
 
 
-NOTE: This is for people who can't wait for the official BleBox support in Home Assistant.
+NOTE: This is for people who can't wait for the official BleBox support in Home Assistant. ([The PR for that is here.](https://github.com/home-assistant/core/pull/32664))
 
-(The PR for that is here: https://github.com/home-assistant/core/pull/32664)
+NOTE: This plugin is still in beta. (Though it IS expected to work perfectly - please open an issue if not!)
 
-
-NOTE: This plugin is still in beta.
-
-(Though it IS expected to work perfectly - please open an issue if not!)
-
-
-NOTE: The repository for blebox_uniapi PyPI module (used by this integration) is here: https://github.com/gadgetmobile/blebox_uniapi
+NOTE: The repository for blebox_uniapi PyPI module (used by this integration) [is here](https://github.com/gadgetmobile/blebox_uniapi).
 
 
 ## Instructions
 
-1. Download the latest release: https://github.com/gadgetmobile/home-assistant-blebox/releases/latest
+1. [Download the latest release](https://github.com/gadgetmobile/home-assistant-blebox/releases/latest)
 
 2. Unzip to your Home Assistant config dir in a `custom_components` subdirectory.
 
@@ -37,7 +31,7 @@ And you're done! (The new device's features should appear in the HASS dashboard)
 
 1. Check that your Home Assistant config directory has a path like this `$HOME/.home-assistant/custom_components/blebox/manifest.json`
 
-2. Check that the above file requires the latest `blebox_uniapi` version, e.g.
+2. Check that the above file requires the [latest](https://github.com/gadgetmobile/blebox_uniapi/releases/latest) `blebox_uniapi` version, e.g.
 
 ```
 "requirements": ["blebox_uniapi==0.1.1", "semver==2.9.1"],
@@ -69,4 +63,4 @@ Home Assistant -> Configuration -> Integrations -> (Big "+" Button) -> (search "
 
 8. If you have further issues, check Home Assistant logs for errors and crashes
 
-9. If all above fails, open an issue here: https://github.com/gadgetmobile/blebox_uniapi/issues/new
+9. If all above fails, [open an issue here](https://github.com/gadgetmobile/blebox_uniapi/issues/new)
