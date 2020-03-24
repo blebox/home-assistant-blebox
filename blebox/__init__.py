@@ -93,4 +93,8 @@ class CommonEntity:
 
     async def async_update(self):
         """Update the cover state."""
-        await self._feature.async_update()
+        try:
+            await self._feature.async_update()
+        except Error as ex:
+            # TODO: coverage
+            _LOGGER.error("Updating %s failed: %s", self.name, ex)
