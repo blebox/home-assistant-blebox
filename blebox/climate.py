@@ -1,5 +1,7 @@
 """BleBox climate entity implementation."""
 
+# pylint: disable=fixme
+
 from homeassistant.components.climate import ClimateDevice
 from homeassistant.components.climate.const import (
     CURRENT_HVAC_HEAT,
@@ -12,6 +14,9 @@ from homeassistant.components.climate.const import (
 from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS
 
 from . import CommonEntity, async_add_blebox
+
+# NOTE: this should be removed once client library uses a semaphore
+PARALLEL_UPDATES = 1
 
 
 # TODO: remove?
@@ -66,6 +71,11 @@ class BleBoxClimateEntity(CommonEntity, ClimateDevice):
     def temperature_unit(self):
         """Return the temperature unit."""
         return TEMP_CELSIUS
+
+    @property
+    def max_temp(self):
+        """Return the maximum temperature supported."""
+        return 125
 
     @property
     def current_temperature(self):

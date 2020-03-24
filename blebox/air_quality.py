@@ -4,6 +4,11 @@ from homeassistant.components.air_quality import AirQualityEntity
 
 from . import CommonEntity, async_add_blebox
 
+# NOTE: this should be removed once client library uses a semaphore
+PARALLEL_UPDATES = 1
+
+# pylint: disable=fixme
+
 
 # TODO: remove?
 async def async_setup_platform(hass, config, async_add, discovery_info=None):

@@ -1,4 +1,7 @@
 """BleBox cover entity implementation."""
+
+import logging
+
 from homeassistant.components.cover import (
     ATTR_POSITION,
     DEVICE_CLASS_DOOR,
@@ -15,6 +18,11 @@ from homeassistant.components.cover import (
 )
 
 from . import CommonEntity, async_add_blebox
+
+_LOGGER = logging.getLogger(__name__)
+
+# NOTE: this should be removed once client library uses a semaphore
+PARALLEL_UPDATES = 1
 
 
 async def async_setup_platform(hass, config, async_add, discovery_info=None):
@@ -37,7 +45,6 @@ class BleBoxCoverEntity(CommonEntity, CoverDevice):
         """Return the equivalent HA cover state."""
         states = {
             None: None,
-            # TODO: use constants in lib instead of numbers
             0: STATE_CLOSING,  # moving down
             1: STATE_OPENING,  # moving up
             2: STATE_OPEN,  # manually stopped
@@ -62,7 +69,6 @@ class BleBoxCoverEntity(CommonEntity, CoverDevice):
         }
         return types[self._feature.device_class]
 
-    # TODO: does changing this at runtime really work as expected?
     @property
     def supported_features(self):
         """Return the supported cover features."""
@@ -75,6 +81,13 @@ class BleBoxCoverEntity(CommonEntity, CoverDevice):
     def current_cover_position(self):
         """Return the current cover position."""
         position = self._feature.current
+        if position == -1:  # possible for shutterBox
+            name = self.name
+            _LOGGER.warning(
+                "Position for %s is unknown. Try calibrating the device.", name
+            )
+            return None
+
         return None if position is None else 100 - position
 
     @property
