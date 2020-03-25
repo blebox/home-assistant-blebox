@@ -6,7 +6,7 @@ from blebox_uniapi.products import Products
 from blebox_uniapi.session import ApiHost
 import voluptuous as vol
 
-from homeassistant import config_entries, core
+from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
@@ -38,33 +38,6 @@ def create_schema(host, port):
     )
 
 
-async def validate_input(hass: core.HomeAssistant, data):
-    """Validate the user input allows us to connect.
-
-    Data has the keys from DATA_SCHEMA with values provided by the user.
-    """
-
-    host = data[CONF_HOST]
-    port = data[CONF_PORT]
-
-    websession = async_get_clientsession(hass)
-    api_host = ApiHost(host, port, None, websession, hass.loop, _LOGGER)
-
-    try:
-        product = await Products.async_from_host(api_host)
-
-    except UnsupportedBoxVersion as ex:
-        _LOGGER.error("Outdated device firmware at %s:%d (%s)", host, port, ex)
-        raise UnsupportedVersion from ex
-
-    except Error as ex:
-        _LOGGER.error("Failed to identify device at %s:%d (%s)", host, port, ex)
-        raise CannotConnect from ex
-
-    # Return some info we want to store in the config entry.
-    return {"title": product.name}
-
-
 class BleBoxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for BleBox devices."""
 
@@ -80,13 +53,43 @@ class BleBoxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         errors = {}
         if user_input is not None:
+
+            def host_port(data):
+                return (data[CONF_HOST], data[CONF_PORT])
+
+            addr = host_port(user_input)
+
             for entry in self.hass.config_entries.async_entries(DOMAIN):
-                if entry.data[CONF_HOST] == user_input[CONF_HOST]:
-                    if entry.data[CONF_PORT] == user_input[CONF_PORT]:
-                        return self.async_abort(reason="already_configured")
+                if addr == host_port(entry.data):
+                    address = "{0}:{1}".format(*addr)
+                    return self.async_abort(
+                        reason="address_already_configured",
+                        description_placeholders={"address": address},
+                    )
 
             try:
-                info = await validate_input(self.hass, user_input)
+                hass = self.hass
+                websession = async_get_clientsession(hass)
+                api_host = ApiHost(*addr, None, websession, hass.loop, _LOGGER)
+
+                try:
+                    product = await Products.async_from_host(api_host)
+
+                except UnsupportedBoxVersion as ex:
+                    _LOGGER.error("Outdated device firmware at %s:%d (%s)", *addr, ex)
+                    raise UnsupportedVersion from ex
+
+                except Error as ex:
+                    _LOGGER.error("Failed to identify device at %s:%d (%s)", *addr, ex)
+                    raise CannotConnect from ex
+
+                # Check if configured but IP changed since
+                mac_address = product.unique_id
+                await self.async_set_unique_id(mac_address)
+                self._abort_if_unique_id_configured()
+
+                # Return some info we want to store in the config entry.
+                info = {"title": product.name}
 
                 return self.async_create_entry(title=info["title"], data=user_input)
             except UnsupportedVersion:

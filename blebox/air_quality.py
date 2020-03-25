@@ -1,29 +1,32 @@
 """BleBox air quality entity."""
 
 from homeassistant.components.air_quality import AirQualityEntity
+from homeassistant.exceptions import PlatformNotReady
 
 from . import CommonEntity, async_add_blebox
 
-# NOTE: this should be removed once client library uses a semaphore
-PARALLEL_UPDATES = 1
 
-# pylint: disable=fixme
-
-
-# TODO: remove?
 async def async_setup_platform(hass, config, async_add, discovery_info=None):
-    """Set up a BleBox air quality device."""
-    # TODO: coverage
+    """Set up BleBox air quality devices."""
     return await async_add_blebox(
-        BleBoxAirQualityEntity, "air_qualities", hass, config, async_add
+        BleBoxAirQualityEntity,
+        "air_qualities",
+        hass,
+        config,
+        async_add,
+        PlatformNotReady,
     )
 
 
 async def async_setup_entry(hass, config_entry, async_add):
-    """Set up a BleBox air quality device."""
-    # TODO: coverage
+    """Set up a BleBox air quality entity."""
     return await async_add_blebox(
-        BleBoxAirQualityEntity, "air_qualities", hass, config_entry.data, async_add,
+        BleBoxAirQualityEntity,
+        "air_qualities",
+        hass,
+        config_entry.data,
+        async_add,
+        PlatformNotReady,
     )
 
 

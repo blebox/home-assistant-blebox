@@ -1,6 +1,4 @@
-"""BleBox climate entity implementation."""
-
-# pylint: disable=fixme
+"""BleBox climate entity."""
 
 from homeassistant.components.climate import ClimateDevice
 from homeassistant.components.climate.const import (
@@ -12,26 +10,27 @@ from homeassistant.components.climate.const import (
     SUPPORT_TARGET_TEMPERATURE,
 )
 from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS
+from homeassistant.exceptions import PlatformNotReady
 
 from . import CommonEntity, async_add_blebox
 
-# NOTE: this should be removed once client library uses a semaphore
-PARALLEL_UPDATES = 1
 
-
-# TODO: remove?
 async def async_setup_platform(hass, config, async_add, discovery_info=None):
     """Set up BleBox platform."""
-    # TODO: coverage
     return await async_add_blebox(
-        BleBoxClimateEntity, "climates", hass, config, async_add
+        BleBoxClimateEntity, "climates", hass, config, async_add, PlatformNotReady
     )
 
 
 async def async_setup_entry(hass, config_entry, async_add):
-    """Set up a BleBox entry."""
+    """Set up a BleBox climate entity."""
     return await async_add_blebox(
-        BleBoxClimateEntity, "climates", hass, config_entry.data, async_add,
+        BleBoxClimateEntity,
+        "climates",
+        hass,
+        config_entry.data,
+        async_add,
+        PlatformNotReady,
     )
 
 

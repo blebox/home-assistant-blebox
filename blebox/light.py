@@ -12,6 +12,7 @@ from homeassistant.components.light import (
     SUPPORT_WHITE_VALUE,
     Light,
 )
+from homeassistant.exceptions import PlatformNotReady
 from homeassistant.util.color import (
     color_hs_to_RGB,
     color_rgb_to_hex,
@@ -20,10 +21,6 @@ from homeassistant.util.color import (
 )
 
 from . import CommonEntity, async_add_blebox
-
-# NOTE: this should be removed once client library uses a semaphore
-PARALLEL_UPDATES = 1
-
 
 # pylint: disable=fixme
 
@@ -40,13 +37,19 @@ async def async_setup_platform(hass, config, async_add, discovery_info=None):
         hass,
         config,
         async_add,
+        PlatformNotReady,
     )
 
 
 async def async_setup_entry(hass, config_entry, async_add):
     """Set up a BleBox entry."""
     return await async_add_blebox(
-        BleBoxLightEntity, "lights", hass, config_entry.data, async_add,
+        BleBoxLightEntity,
+        "lights",
+        hass,
+        config_entry.data,
+        async_add,
+        PlatformNotReady,
     )
 
 
