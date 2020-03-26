@@ -34,7 +34,7 @@ And you're done! (The new device's features should appear in the HASS dashboard)
 2. Check that the above file requires the [latest](https://github.com/gadgetmobile/blebox_uniapi/releases/latest) `blebox_uniapi` version, e.g.
 
 ```
-"requirements": ["blebox_uniapi==0.1.1", "semver==2.9.1"],
+"requirements": ["blebox_uniapi==1.2.0", "semver==2.9.1"],
 ```
 
 3. Restart Home Assistant (if you have installed/updated any of the above)
