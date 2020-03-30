@@ -2,7 +2,7 @@
 import asyncio
 import logging
 
-from blebox_uniapi.error import ConnectionError, Error
+from blebox_uniapi.error import Error
 from blebox_uniapi.products import Products
 from blebox_uniapi.session import ApiHost
 import voluptuous as vol
@@ -64,9 +64,6 @@ async def async_add_blebox(klass, method, hass, config, async_add, exception):
     api_host = ApiHost(host, port, timeout, websession, hass.loop, _LOGGER)
     try:
         product = await Products.async_from_host(api_host)
-    except ConnectionError as ex:
-        _LOGGER.error("Identify failed (%s)", ex)
-        raise exception from ex
     except Error as ex:
         _LOGGER.error("Identify failed at %s:%d (%s)", host, port, ex)
         raise exception from ex
@@ -101,5 +98,16 @@ class CommonEntity:
         try:
             await self._feature.async_update()
         except Error as ex:
-            # TODO: coverage
             _LOGGER.error("Updating '%s' failed: %s", self.name, ex)
+
+    @property
+    def device_info(self):
+        """Return device information about this WLED device."""
+        product = self._feature.product
+        return {
+            "identifiers": {(DOMAIN, product.unique_id)},
+            "name": product.name,
+            "manufacturer": product.brand,
+            "model": product.model,
+            "sw_version": product.firmware_version,
+        }
