@@ -20,25 +20,12 @@ from homeassistant.util.color import (
     rgb_hex_to_rgb_list,
 )
 
-from . import CommonEntity, async_add_blebox
+from . import BleBoxEntity, async_add_blebox
 
 # pylint: disable=fixme
 
 
 _LOGGER = logging.getLogger(__name__)
-
-
-async def async_setup_platform(hass, config, async_add, discovery_info=None):
-    """Set up BleBox platform."""
-    return await async_add_blebox(
-        # TODO: coverage
-        BleBoxLightEntity,
-        "lights",
-        hass,
-        config,
-        async_add,
-        PlatformNotReady,
-    )
 
 
 async def async_setup_entry(hass, config_entry, async_add):
@@ -53,7 +40,7 @@ async def async_setup_entry(hass, config_entry, async_add):
     )
 
 
-class BleBoxLightEntity(CommonEntity, Light):
+class BleBoxLightEntity(BleBoxEntity, Light):
     """Representation of BleBox lights."""
 
     @property

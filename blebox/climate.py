@@ -12,14 +12,7 @@ from homeassistant.components.climate.const import (
 from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS
 from homeassistant.exceptions import PlatformNotReady
 
-from . import CommonEntity, async_add_blebox
-
-
-async def async_setup_platform(hass, config, async_add, discovery_info=None):
-    """Set up BleBox platform."""
-    return await async_add_blebox(
-        BleBoxClimateEntity, "climates", hass, config, async_add, PlatformNotReady
-    )
+from . import BleBoxEntity, async_add_blebox
 
 
 async def async_setup_entry(hass, config_entry, async_add):
@@ -34,7 +27,7 @@ async def async_setup_entry(hass, config_entry, async_add):
     )
 
 
-class BleBoxClimateEntity(CommonEntity, ClimateDevice):
+class BleBoxClimateEntity(BleBoxEntity, ClimateDevice):
     """Representation of a BleBox climate feature (saunaBox)."""
 
     @property

@@ -18,16 +18,9 @@ from homeassistant.components.cover import (
 )
 from homeassistant.exceptions import PlatformNotReady
 
-from . import CommonEntity, async_add_blebox
+from . import BleBoxEntity, async_add_blebox
 
 _LOGGER = logging.getLogger(__name__)
-
-
-async def async_setup_platform(hass, config, async_add, discovery_info=None):
-    """Set up BleBox cover."""
-    return await async_add_blebox(
-        BleBoxCoverEntity, "covers", hass, config, async_add, PlatformNotReady
-    )
 
 
 async def async_setup_entry(hass, config_entry, async_add):
@@ -42,7 +35,7 @@ async def async_setup_entry(hass, config_entry, async_add):
     )
 
 
-class BleBoxCoverEntity(CommonEntity, CoverDevice):
+class BleBoxCoverEntity(BleBoxEntity, CoverDevice):
     """Representation of a BleBox cover feature."""
 
     @property
@@ -120,6 +113,9 @@ class BleBoxCoverEntity(CommonEntity, CoverDevice):
 
     async def async_set_cover_position(self, **kwargs):
         """Set the cover position."""
+        if not SUPPORT_SET_POSITION & self.supported_features:
+            raise NotImplementedError
+
         position = kwargs[ATTR_POSITION]
         if position is not None:
             await self._feature.async_set_position(100 - position)

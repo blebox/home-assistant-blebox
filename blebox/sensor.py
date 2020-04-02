@@ -6,14 +6,7 @@ from homeassistant.const import DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS
 from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers.entity import Entity
 
-from . import CommonEntity, async_add_blebox
-
-
-async def async_setup_platform(hass, config, async_add, discovery_info=None):
-    """Set up BleBox platform."""
-    return await async_add_blebox(
-        BleBoxSensorEntity, "sensors", hass, config, async_add, PlatformNotReady
-    )
+from . import BleBoxEntity, async_add_blebox
 
 
 async def async_setup_entry(hass, config_entry, async_add):
@@ -33,7 +26,7 @@ UNIT_MAP = {"celsius": TEMP_CELSIUS}
 DEV_CLASS_MAP = {"temperature": DEVICE_CLASS_TEMPERATURE}
 
 
-class BleBoxSensorEntity(CommonEntity, Entity):
+class BleBoxSensorEntity(BleBoxEntity, Entity):
     """Representation of a BleBox sensor feature."""
 
     @property
