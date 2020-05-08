@@ -3,7 +3,7 @@
 Home Assistant BleBox integration (as a Home Assistant custom component).
 
 
-NOTE: This is for people who can't wait for the official BleBox support in Home Assistant. ([The PR for that is here.](https://github.com/home-assistant/core/pull/32664))
+NOTE: This is for people who can't wait for the official BleBox support in Home Assistant. ([Comming VERY soon!.])
 
 NOTE: This plugin is still in beta. (Though it IS expected to work perfectly - please open an issue if not!)
 
